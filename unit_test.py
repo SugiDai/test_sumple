@@ -17,6 +17,8 @@ def set_input(driver, case):
 
     input_list = case['input_list']
     for input_data in input_list:
+        # element = "#{}".format(input_data['id'])
+        # driver.find_elements_by_css_selector(selector)
         p_element = driver.find_element_by_id(input_data['id'])
         element = p_element.find_element_by_class_name(input_data['class'])
         element.send_keys(input_data['value'])
