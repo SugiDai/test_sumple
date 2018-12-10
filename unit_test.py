@@ -35,7 +35,7 @@ def set_input(driver, case):
     Alert(driver).accept()
 
 
-def checkput(driver, case):
+def checkput(driver, case, sheet):
 
     # imagesフォルダにスクリーンショットを保存
     file_name = "case{}_3.png".format(case['no'])
@@ -46,32 +46,32 @@ def checkput(driver, case):
         p_element = driver.find_element_by_id(check_data['id'])
         element = p_element.find_element_by_class_name(check_data['class'])
         value = element.get_attribute("value")
-        if(check_data['value']==value):
-            print('OK:{}',format(value))
+        if(check_data['value'] == value):
+            print('OK:{}', format(check_data['result']))
+            sheet[check_data['result']] = "○"
         else:
-            print('NG:{}',format(value))
+            print('NG:{}', format(check_data['result']))
+            sheet[check_data['result']] = "×"
 
 
-def test_case(case):
+def test_case(case, checkput, sheet):
     driver = webdriver.Chrome("C:\DRIVERS\chromedriver.exe")
     driver.get("C:\work2\index.html")
     # driver.set_window_size(1250, 1036)
     # driver.execute_script("document.body.style.zoom='90%'")
 
     init_check(driver, case)
-
     set_input(driver, case)
-
-    checkput(driver, case)
+    checkput(driver, case, sheet)
 
     # 終了
     driver.close()
 
 
-def test_phase(case_list):
+def test_phase(case_list, sheet):
     print(len(case_list))
     for case in case_list:
-        test_case(case)
+        test_case(case, checkput, sheet)
 
 
 def get_case_list(sheet):
@@ -102,6 +102,8 @@ def get_case_list(sheet):
             check_dict['id'] = str(row[43].value)
             check_dict['class'] = str(row[46].value)
             check_dict['value'] = str(row[50].value)
+            check_dict['result'] = str(row[55].coordinate)
+
             check_list.append(check_dict)
 
     case_dict = {'no': count//3, 'input_list': input_list,
@@ -123,8 +125,8 @@ def main():
         # 処理対象シート取得
         sheet = wb[name]
         case_list = get_case_list(sheet)
-        test_phase(case_list)
-
+        test_phase(case_list, sheet)
+    wb.save('C:\\work2\\result.xlsx')
 
 if __name__ == "__main__":
     main()
