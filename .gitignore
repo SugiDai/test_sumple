@@ -1,7 +1,7 @@
 # dependencies
 node_modules
 
-.images
+images
 
 # logs
 npm-debug.log
