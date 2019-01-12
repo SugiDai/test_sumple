@@ -28,8 +28,18 @@ def set_input(driver, case):
     file_name = "case{}_2.png".format(case['no'])
     driver.save_screenshot("./images/" + file_name)
 
+    driver.execute_script("window.scrollTo(0.4, 0)")
+    time.sleep(2)
+ 
     # 単一の要素を取得
     driver.find_element_by_id('btn01').click()
+
+    # imagesフォルダにスクリーンショットを保存
+    alert = driver.switch_to_alert()
+    alert_text = alert.text
+    print(alert_text)
+    file_name = "case{}_X.png".format(case['no'])
+    # driver.save_screenshot("./images/" + file_name)
 
     # アラートボタン押下
     Alert(driver).accept()
@@ -55,8 +65,10 @@ def checkput(driver, case, sheet):
 
 
 def test_case(case, checkput, sheet):
+
     driver = webdriver.Chrome("C:\DRIVERS\chromedriver.exe")
     driver.get("C:\work2\index.html")
+
     # driver.set_window_size(1250, 1036)
     # driver.execute_script("document.body.style.zoom='90%'")
 
